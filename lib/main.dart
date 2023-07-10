@@ -1,27 +1,37 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
+import 'screen/home.dart';
+import 'package:provider/provider.dart';
+
 void main() {
   runApp(MyApp());
+}
+
+class AuthProvider extends ChangeNotifier {
+  bool isAuthenticated = false;
+
+  void login() {
+    isAuthenticated = true;
+    notifyListeners();
+  }
+
+  void logout() {
+    isAuthenticated = false;
+    notifyListeners();
+  }
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'White App Bar',
-      theme: ThemeData(
-        primaryColor: Colors.white, // Set the primary color to white
+    return ChangeNotifierProvider(
+      create: (context) => AuthProvider(),
+      child: MaterialApp(
+        title: 'White App Bar',
+        theme: ThemeData(
+          primaryColor: Colors.white, // Set the primary color to white
+        ),
+        home: HomePage(),
       ),
-      home: HomePage(),
-      // home: Scaffold(
-      //   appBar: AppBar(
-      //     title: Text('White App Bar'),
-      //     backgroundColor: Colors.white, // Set the background color to white
-      //   ),
-      //   body: Center(
-      //     child: Text('Hello, World!'),
-      //   ),
-      // ),
     );
   }
 }
