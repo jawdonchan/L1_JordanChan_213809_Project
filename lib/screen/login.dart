@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:proj_layout/screen/signup.dart';
 import 'package:proj_layout/carpark/cp_jsonparser.dart';
 
+import 'home.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -27,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(
           builder: (context) =>
               // NextPage()
-              HomePageBS(),
+              HomePage(),
           // CPJsonParse(),
         ),
       );

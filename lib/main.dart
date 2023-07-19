@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proj_layout/screen/prompt.dart';
 import 'screen/home.dart';
 import 'package:provider/provider.dart';
 import 'package:proj_layout/bus/home.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Colors.white, // Set the primary color to white
         ),
-        home: HomePageBS(),
+        home: PromptPage(),
       ),
     );
   }
