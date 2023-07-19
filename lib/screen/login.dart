@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:proj_layout/bus/home.dart';
 import 'package:provider/provider.dart';
-import 'package:proj_layout/bus/home.dart';
+import 'package:proj_layout/screen/signup.dart';
 import 'package:proj_layout/carpark/cp_jsonparser.dart';
-
 
 class LoginPage extends StatefulWidget {
   @override
@@ -25,16 +24,30 @@ class _LoginPageState extends State<LoginPage> {
       // Navigate to the next page after successful login
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => 
-        // NextPage()
-         HomePageBS(),
-        // CPJsonParse(),
+        MaterialPageRoute(
+          builder: (context) =>
+              // NextPage()
+              HomePageBS(),
+          // CPJsonParse(),
         ),
       );
     } else {
       // Handle login failure (e.g., show an error message)
       print('Invalid email or password');
     }
+  }
+
+  void signup() {
+    // Navigate to the next page after successful login
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            // NextPage()
+
+            SignUpPage(),
+      ),
+    );
   }
 
   @override
@@ -54,10 +67,10 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       body: SingleChildScrollView(
-              child: Padding(
+        child: Padding(
           padding: EdgeInsets.all(20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Align(
                 alignment: Alignment.topLeft,
@@ -67,29 +80,87 @@ class _LoginPageState extends State<LoginPage> {
                   textAlign: TextAlign.left,
                 ),
               ),
-              Text(
-                'Email',
-                style: TextStyle(fontSize: 25),
+              SizedBox(
+                height: 30,
               ),
-              TextField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Email',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
                 ),
-                keyboardType: TextInputType.emailAddress,
               ),
-              SizedBox(height: 20.0),
-              TextField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: 'Password',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    // labelText: 'Email',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
                 ),
-                obscureText: true,
               ),
-              SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: login,
-                child: Text('Login'),
+              SizedBox(height: 30.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Password:',
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    // labelText: 'Password',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                  ),
+                  obscureText: true,
+                ),
+              ),
+              SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: login,
+                    child: Text(
+                      'Login',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.white, // Set the button background color
+                      onPrimary: Colors.white, // Set the text color
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 40.0,
+                          vertical: 10.0), // Set the button padding
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              8.0)), // Set the button border radius
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: signup,
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.white, // Set the button background color
+                      onPrimary: Colors.white, // Set the text color
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 40.0,
+                          vertical: 10.0), // Set the button padding
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              8.0)), // Set the button border radius
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
