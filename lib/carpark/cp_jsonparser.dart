@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:proj_layout/bus/httpsevice.dart';
-import 'package:proj_layout/bus/buses.dart';
+import 'package:proj_layout/carpark/httpservice.dart';
+import 'package:proj_layout/carpark/Carparks.dart';
 
 class CPJsonParse extends StatefulWidget {
- 
-  // CPJsonParse({Key key}) : super(key: key);
+  CPJsonParse({Key key}) : super(key: key);
   @override
   _CPJsonParseState createState() => _CPJsonParseState();
 }
@@ -24,15 +23,14 @@ class Debouncer {
 }
 
 class _CPJsonParseState extends State<CPJsonParse> {
-  final _controller = TextEditingController();
   final debouncer = Debouncer(msecond: 1000);
-  List<Service> _cp;
+  List<Value> _cp;
   bool _loading;
   @override
   void initState() {
     super.initState();
     _loading = true;
-    HttpService.getBusStop(_controller.text).then((cp) {
+    HttpService.getCarparks().then((cp) {
       setState(() {
         _cp = cp;
         _loading = false;
@@ -44,19 +42,18 @@ class _CPJsonParseState extends State<CPJsonParse> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_loading ? 'Loading...' : 'Bus Availibility'),
+        title: Text(_loading ? 'Loading...' : 'Carpark Availability'),
       ),
       body: Container(
         padding: EdgeInsets.all(8.0),
         child: Column(
           children: [
             searchTF(),
-            Text(_controller.text),
             Expanded(
               child: ListView.builder(
                 itemCount: null == _cp ? 0 : _cp.length,
                 itemBuilder: (context, index) {
-                  Service cpAvail = _cp[index];
+                  Value cpAvail = _cp[index];
                   return Card(
                     child: Padding(
                       padding: EdgeInsets.all(10.0),
@@ -65,8 +62,7 @@ class _CPJsonParseState extends State<CPJsonParse> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Bus Number: ' +
-                                cpAvail.serviceNo.toString().split('.').last,
+                            'Area: ' + cpAvail.area.toString().split('.').last,
                             style:
                                 TextStyle(fontSize: 16.0, color: Colors.black),
                           ),
@@ -74,24 +70,18 @@ class _CPJsonParseState extends State<CPJsonParse> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Flexible(
-                                child: Text(
-                                  'Lat: ' + cpAvail.nextBus.latitude,
-                                  style: TextStyle(
-                                      fontSize: 14.0, color: Colors.black87),
-                                ),
+                              Text(
+                                ' Location: ' + cpAvail.development,
+                                style: TextStyle(
+                                    fontSize: 9.0, color: Colors.black87, fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                'Long: ' + cpAvail.nextBus.longitude.toString(),
+                                'Availabe Lots: ' +
+                                    cpAvail.availableLots.toString(),
                                 style: TextStyle(
                                     fontSize: 14.0, color: Colors.black87),
                               ),
                             ],
-                          ),
-                          Text(
-                            'Load : ' + cpAvail.nextBus.load.toString(),
-                            style: TextStyle(
-                                fontSize: 14.0, color: Colors.black87),
                           ),
                         ],
                       ),
@@ -108,7 +98,6 @@ class _CPJsonParseState extends State<CPJsonParse> {
 
   Widget searchTF() {
     return TextField(
-      controller: _controller,
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: const BorderRadius.all(
@@ -118,13 +107,16 @@ class _CPJsonParseState extends State<CPJsonParse> {
         filled: true,
         fillColor: Colors.white60,
         contentPadding: EdgeInsets.all(15.0),
-        hintText: 'Filter by Bus Stop Code',
+        hintText: 'Filter by Area',
       ),
       onChanged: (string) {
         debouncer.run(() {
-          HttpService.getBusStop(_controller.text).then((uCp) {
+          // setState(() {
+          //   title = 'Searching..';
+          // });
+          HttpService.getCarparks().then((uCp) {
             setState(() {
-              _cp = Service.filterList(uCp, string);
+              _cp = Value.filterList(uCp, string);
             });
           });
         });

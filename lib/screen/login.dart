@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:proj_layout/bus/home.dart';
 import 'package:provider/provider.dart';
-import 'home.dart';
-import 'package:proj_layout/bus/bs_jsonparser.dart';
+import 'package:proj_layout/bus/home.dart';
+import 'package:proj_layout/carpark/cp_jsonparser.dart';
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -25,8 +27,8 @@ class _LoginPageState extends State<LoginPage> {
         context,
         MaterialPageRoute(builder: (context) => 
         // NextPage()
-        
-        CPJsonParse(),
+         HomePageBS(),
+        // CPJsonParse(),
         ),
       );
     } else {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screen/home.dart';
 import 'package:provider/provider.dart';
-
+import 'package:proj_layout/bus/home.dart';
 void main() {
   runApp(MyApp());
 }
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Colors.white, // Set the primary color to white
         ),
-        home: HomePage(),
+        home: HomePageBS(),
       ),
     );
   }
