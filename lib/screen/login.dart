@@ -29,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(
           builder: (context) =>
               // NextPage()
+              // HomePage(),
               HomePage(),
           // CPJsonParse(),
         ),

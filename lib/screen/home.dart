@@ -3,6 +3,7 @@ import 'package:proj_layout/main.dart';
 import 'nextpage.dart';
 import 'login.dart';
 import 'package:provider/provider.dart';
+import 'about.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class _HomePageState extends State<HomePage> {
     Page1(), // Replace Page1, Page2, Page3, and Page4 with your actual pages.
     Page2(),
     Page3(),
-    Page4(),
+    AboutPage(),
   ];
 
   void _onTabTapped(int index) {
@@ -29,7 +30,44 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My App'),
+        backgroundColor: Colors.white,
+        elevation: 4,
+         leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios, // Use any custom icon here
+            color: Colors.black,
+            size: 25, // Set the desired color for the icon
+          ),
+          onPressed: () {
+            Navigator.pop(context); // Go back to the previous page
+          },
+        ),
+        actions: [
+    // Add the user icon and username here
+    Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        CircleAvatar(
+          // Use your user icon image here
+          // backgroundImage: AssetImage('assets/user_icon.png'),
+          backgroundColor: Colors.blueAccent,
+          radius: 16,
+        ),
+        SizedBox(width: 8),
+        Text(
+          'Username',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(width: 16), // Add some space between the icon and username
+      ],
+    ),
+  ],
+        // title: Text('My App'),
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
