@@ -3,6 +3,7 @@ import 'package:proj_layout/main.dart';
 import 'nextpage.dart';
 import 'login.dart';
 import 'package:provider/provider.dart';
+import 'services.dart';
 import 'about.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,19 +13,37 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+  String _pageTitle = 'Home'; // Initial title
 
   final List<Widget> _pages = [
     Page1(), // Replace Page1, Page2, Page3, and Page4 with your actual pages.
     Page2(),
     Page3(),
-    AboutPage(),
+    ServicesPage(),
   ];
 
   void _onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
+      // Update the title based on the selected page
+      switch (_currentIndex) {
+        case 0:
+          _pageTitle = 'Home';
+          break;
+        case 1:
+          _pageTitle = 'Search';
+          break;
+        case 2:
+          _pageTitle = 'Favorites';
+          break;
+        case 3:
+          _pageTitle = 'Settings';
+          break;
+      }
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +51,20 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 4,
-         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios, // Use any custom icon here
-            color: Colors.black,
-            size: 25, // Set the desired color for the icon
-          ),
-          onPressed: () {
-            Navigator.pop(context); // Go back to the previous page
-          },
+        automaticallyImplyLeading: false,
+        //  leading: IconButton(
+        //   icon: Icon(
+        //     Icons.arrow_back_ios, // Use any custom icon here
+        //     color: Colors.black,
+        //     size: 25, // Set the desired color for the icon
+        //   ),
+        //   onPressed: () {
+        //     Navigator.pop(context); // Go back to the previous page
+        //   },
+        // ),
+         title: Text(
+          _pageTitle,
+          style: TextStyle(color: Colors.black), // Set the text color
         ),
         actions: [
     // Add the user icon and username here
