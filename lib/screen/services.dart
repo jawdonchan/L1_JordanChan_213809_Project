@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:proj_layout/screen/home.dart'; // Replace this with the file path for the home page
-// import 'package:search.dart'; // Replace this with the file path for the search page
-// import 'package:proj_layout/favorites_page.dart'; // Replace this with the file path for the favorites page
+import 'package:proj_layout/screen/home.dart'; 
+import 'about.dart';
+// import 'package:search.dart'; 
+
 
 class ServicesPage extends StatelessWidget {
   @override
@@ -117,10 +118,10 @@ class ServicesPage extends StatelessWidget {
                     icon: Icons.check_circle_rounded,
                     title: 'About Us',
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => ProfilePage()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AboutPage()),
+                      );
                     },
                   ),
                 ],
