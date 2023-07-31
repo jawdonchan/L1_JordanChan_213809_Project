@@ -28,7 +28,6 @@ class MyApp extends StatelessWidget {
       create: (context) => AuthProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false, 
-        title: 'White App Bar',
         theme: ThemeData(
           primaryColor: Colors.white, // Set the primary color to white
         ),
