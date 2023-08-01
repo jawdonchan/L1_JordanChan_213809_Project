@@ -3,6 +3,7 @@ import 'package:proj_layout/bus/home.dart';
 import 'package:provider/provider.dart';
 import 'package:proj_layout/screen/signup.dart';
 import 'package:proj_layout/carpark/cp_jsonparser.dart';
+import 'package:proj_layout/services/firebaseauth_service.dart';
 
 import 'home.dart';
 
@@ -15,30 +16,30 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  void login() {
-    String email = _emailController.text;
-    String password = _passwordController.text;
+  // void login() {
+  //   String email = _emailController.text;
+  //   String password = _passwordController.text;
 
-    // Here you can add your logic to validate the email and password.
-    // For simplicity, we'll assume the login is successful if both fields are non-empty.
+  //   // Here you can add your logic to validate the email and password.
+  //   // For simplicity, we'll assume the login is successful if both fields are non-empty.
 
-    if (email.isNotEmpty && password.isNotEmpty) {
-      // Navigate to the next page after successful login
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              // NextPage()
-              // HomePage(),
-              HomePage(),
-          // CPJsonParse(),
-        ),
-      );
-    } else {
-      // Handle login failure (e.g., show an error message)
-      print('Invalid email or password');
-    }
-  }
+  //   if (email.isNotEmpty && password.isNotEmpty) {
+  //     // Navigate to the next page after successful login
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) =>
+  //             // NextPage()
+  //             // HomePage(),
+  //             HomePage(),
+  //         // CPJsonParse(),
+  //       ),
+  //     );
+  //   } else {
+  //     // Handle login failure (e.g., show an error message)
+  //     print('Invalid email or password');
+  //   }
+  // }
 
   void signup() {
     // Navigate to the next page after successful login
@@ -130,7 +131,19 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: login,
+                    onPressed: () async {
+                      var reguser = await FirebaseAuthService().signIn(
+                        email: _emailController.text.trim(),
+                        password: _passwordController.text.trim(),
+                      );
+                      if (reguser != null) {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => HomePage()));
+                      } else {
+                        Text('Invalid Login');
+                      }
+                    },
+                    // login,
                     child: Text(
                       'Login',
                       style: TextStyle(color: Colors.black),

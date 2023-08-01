@@ -33,6 +33,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   http:
+  firebase_core:
+  firebase_auth:
+  cloud_firestore:
+  fluttertoast: ^7.1.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

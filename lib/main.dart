@@ -3,7 +3,11 @@ import 'package:proj_layout/screen/prompt.dart';
 import 'screen/home.dart';
 import 'package:provider/provider.dart';
 import 'package:proj_layout/bus/home.dart';
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -27,7 +31,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => AuthProvider(),
       child: MaterialApp(
-        debugShowCheckedModeBanner: false, 
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: Colors.white, // Set the primary color to white
         ),
