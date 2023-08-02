@@ -1,10 +1,10 @@
 import 'package:http/http.dart' as http;
-import 'package:proj_layout/carpark/Carparks.dart';
+import 'BusStop.dart';
 
 class HttpService {
   static const String url =
-      'http://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2';
-  static Future<List<Value>> getCarparks() async {
+      'http://datamall2.mytransport.sg/ltaodataservice/BusStops';
+  static Future<List<Value>> getBusStops() async {
     try {
       final response = await http.get(url, headers: {
         'AccountKey': 'nQmYcxLjQKq6Wo4qo2BoXw==',

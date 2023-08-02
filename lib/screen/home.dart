@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:proj_layout/bus/home.dart';
+import 'package:proj_layout/busStops/JsonParseBusStop.dart';
 import 'package:proj_layout/main.dart';
 import 'nextpage.dart';
 import 'login.dart';
@@ -16,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   String _pageTitle = 'Home'; // Initial title
 
   final List<Widget> _pages = [
-    Page1(), // Replace Page1, Page2, Page3, and Page4 with your actual pages.
+    BusStopsJsonParse(), // Replace Page1, Page2, Page3, and Page4 with your actual pages.
     Page2(),
     Page3(),
     ServicesPage(),
@@ -31,13 +33,13 @@ class _HomePageState extends State<HomePage> {
           _pageTitle = 'Home';
           break;
         case 1:
-          _pageTitle = 'Search';
+          _pageTitle = 'Saved';
           break;
         case 2:
-          _pageTitle = 'Favorites';
+          _pageTitle = 'Card';
           break;
         case 3:
-          _pageTitle = 'Settings';
+          _pageTitle = 'Services';
           break;
       }
     });
@@ -105,16 +107,16 @@ class _HomePageState extends State<HomePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
-            label: 'Favorites',
+            label: 'Saved',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: Icon(Icons.credit_card),
+            label: 'Cards',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_box_outlined),
+            label: 'Services',
           ),
         ],
       ),

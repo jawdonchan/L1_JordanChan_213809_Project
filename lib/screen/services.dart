@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:proj_layout/screen/home.dart'; 
+import 'package:proj_layout/screen/profile.dart'; 
 import 'about.dart';
+import 'email.dart';
 // import 'package:search.dart'; 
 
 
@@ -27,19 +29,19 @@ class ServicesPage extends StatelessWidget {
                 children: [
                   _iconWithBorder(
                     context,
-                    icon: Icons.home,
-                    title: 'Home',
+                    icon: Icons.redeem,
+                    title: 'Reward',
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => HomePage()),
+                      // );
                     },
                   ),
                   _iconWithBorder(
                     context,
-                    icon: Icons.search,
-                    title: 'Search',
+                    icon: Icons.credit_card,
+                    title: 'Concession',
                     onPressed: () {
                       // Navigator.push(
                       //   context,
@@ -49,8 +51,8 @@ class ServicesPage extends StatelessWidget {
                   ),
                   _iconWithBorder(
                     context,
-                    icon: Icons.favorite,
-                    title: 'Favourite',
+                    icon: Icons.attach_money_rounded,
+                    title: 'Top Up',
                     onPressed: () {
                       // Navigator.push(
                       //   context,
@@ -85,10 +87,10 @@ class ServicesPage extends StatelessWidget {
                     icon: Icons.person,
                     title: 'Profile',
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => ProfilePage()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ProfilePage()),
+                      );
                     },
                   ),
                   _iconWithBorder(
@@ -106,12 +108,12 @@ class ServicesPage extends StatelessWidget {
                     context,
                     icon: Icons.email,
                     title: 'Email',
-                    onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => ProfilePage()),
-                      // );
-                    },
+                    // onPressed: () {
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(builder: (context) => EmailPage()),
+                    //   );
+                    // },
                   ),
                   _iconWithBorder(
                     context,

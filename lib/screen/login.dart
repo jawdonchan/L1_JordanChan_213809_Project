@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proj_layout/bus/home.dart';
 import 'package:provider/provider.dart';
 import 'package:proj_layout/screen/signup.dart';
-import 'package:proj_layout/carpark/cp_jsonparser.dart';
+
 import 'package:proj_layout/services/firebaseauth_service.dart';
 
 import 'home.dart';
