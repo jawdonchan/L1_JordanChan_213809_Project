@@ -8,12 +8,16 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   User _user; // Holds the currently logged-in user
+  String _username; // Holds the trimmed username from email
 
   @override
   void initState() {
     super.initState();
     // Get the current user from Firebase Authentication
     _user = FirebaseAuth.instance.currentUser;
+
+    // Extract the username from the email address
+    _username = _user.email.split('@')[0];
   }
 
   @override
@@ -27,22 +31,22 @@ class _ProfilePageState extends State<ProfilePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(0,50,0,0),
+            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: Container(
-               decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey, width: 2.0),
-            borderRadius: BorderRadius.circular(10),
-               ),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 2.0),
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                        decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey, width: 2.0),
-              ),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.grey, width: 2.0),
+                      ),
                       child: CircleAvatar(
                         // Display user's profile picture if available
                         // backgroundImage: _user.photoURL != null ? NetworkImage(_user.photoURL) : AssetImage('assets/default_avatar.png'),
@@ -53,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(width: 20),
                     Text(
-                      'Username: ${_user.displayName ?? 'Not available'}',
+                      'Username: $_username', // Display the trimmed username
                       style: TextStyle(fontSize: 20),
                     ),
                   ],

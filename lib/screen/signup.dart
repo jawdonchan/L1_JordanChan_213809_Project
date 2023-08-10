@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:proj_layout/screen/login.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -6,23 +8,65 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _isPasswordVisible = false;
-  bool _isDeclarationChecked = false;
-  void signUp() {
-    String name = _nameController.text;
-    String email = _emailController.text;
-    String password = _passwordController.text;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _confirmPasswordController = TextEditingController();
+  bool _isPasswordVisible = false; // hide password text
+  bool _isDeclarationChecked = false; // for the checkbox
+  void signUp() async {
+    try {
+      String email = _emailController.text;
+      String password = _passwordController.text;
+      String confirmPassword = _confirmPasswordController.text;
 
-    // Perform sign-up logic with the provided email and password
-    // ...
+      if (email.isNotEmpty &&
+          password.isNotEmpty &&
+          confirmPassword.isNotEmpty) {
+        if (password == confirmPassword) {
+          UserCredential userCredential =
+              await _auth.createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
 
-    // Example: Print the email and password for demonstration
-    print('Name: $name');
-    print('Email: $email');
-    print('Password: $password');
+          if (userCredential != null) {
+            // Successfully signed up, navigate to the next page
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          }
+        } else {
+          // Handle password mismatch
+          throw 'Passwords do not match';
+        }
+      } else {
+        // Handle missing input fields
+        throw 'Please enter email and password';
+      }
+    } catch (error) {
+      // Handle signup error
+      print('Error signing up: $error');
+      // Display error message using a dialog or a snackbar
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Sign Up Error'),
+            content: Text(error.toString()),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -59,24 +103,6 @@ class _SignUpPageState extends State<SignUpPage> {
               SizedBox(
                 height: 20,
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Name *',
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    // labelText: 'Email',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                  ),
-                ),
-              ),
               SizedBox(height: 10.0),
               Align(
                 alignment: Alignment.centerLeft,
@@ -87,7 +113,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
+                child: TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
                     // labelText: 'Email',
@@ -104,35 +130,24 @@ class _SignUpPageState extends State<SignUpPage> {
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    // labelText: 'Password',
-                    suffixIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
-                      child: Icon(
-                        _isPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(
-                        color: Colors.blue, // Set the border color
-                        width: 2.0, // Set the border width
-                      ),
-                    ),
-                  ),
-                  obscureText: !_isPasswordVisible,
+              buildPasswordInput(_passwordController, _isPasswordVisible, () {
+                setState(() {
+                  _isPasswordVisible = !_isPasswordVisible;
+                });
+              }),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Confirm Password *',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
                 ),
               ),
+              buildPasswordInput(_confirmPasswordController, _isPasswordVisible,
+                  () {
+                setState(() {
+                  _isPasswordVisible = !_isPasswordVisible;
+                });
+              }),
               SizedBox(
                 height: 12,
               ),
@@ -180,4 +195,33 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
+}
+
+Widget buildPasswordInput(
+  TextEditingController controller,
+  bool isPasswordVisible,
+  Function togglePasswordVisibility,
+) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        suffixIcon: GestureDetector(
+          onTap: togglePasswordVisibility,
+          child: Icon(
+            isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+          ),
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(
+            color: Colors.blue, // Set the border color
+            width: 2.0, // Set the border width
+          ),
+        ),
+      ),
+      obscureText: !isPasswordVisible,
+    ),
+  );
 }
