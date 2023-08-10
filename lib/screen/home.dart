@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proj_layout/bus/home.dart';
 import 'package:proj_layout/busStops/JsonParseBusStop.dart';
 import 'package:proj_layout/main.dart';
+import 'package:proj_layout/screen/card_list.dart';
 import 'nextpage.dart';
 import 'login.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     BusStopsJsonParse(), // Replace Page1, Page2, Page3, and Page4 with your actual pages.
     Page2(),
-    Page3(),
+    CardListPage(),
     ServicesPage(),
   ];
 
@@ -45,8 +46,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,35 +63,36 @@ class _HomePageState extends State<HomePage> {
         //     Navigator.pop(context); // Go back to the previous page
         //   },
         // ),
-         title: Text(
+        title: Text(
           _pageTitle,
           style: TextStyle(color: Colors.black), // Set the text color
         ),
         actions: [
-    // Add the user icon and username here
-    Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        CircleAvatar(
-          // Use your user icon image here
-          // backgroundImage: AssetImage('assets/user_icon.png'),
-          backgroundColor: Colors.blueAccent,
-          radius: 16,
-        ),
-        SizedBox(width: 8),
-        Text(
-          'Username',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
+          // Add the user icon and username here
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                // Use your user icon image here
+                // backgroundImage: AssetImage('assets/user_icon.png'),
+                backgroundColor: Colors.blueAccent,
+                radius: 16,
+              ),
+              SizedBox(width: 8),
+              Text(
+                'Username',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                  width: 16), // Add some space between the icon and username
+            ],
           ),
-        ),
-        SizedBox(width: 16), // Add some space between the icon and username
-      ],
-    ),
-  ],
+        ],
         // title: Text('My App'),
       ),
       body: _pages[_currentIndex],
@@ -100,7 +100,8 @@ class _HomePageState extends State<HomePage> {
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
         selectedItemColor: Colors.blue, // Change the selected icon color here
-        unselectedItemColor: Colors.grey, // Change the unselected icon color here
+        unselectedItemColor:
+            Colors.grey, // Change the unselected icon color here
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

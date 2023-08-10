@@ -39,4 +39,34 @@ class FirebaseAuthService {
   Future<void> signOut() async {
     await _fbAuth.signOut();
   } //signOut
+// update email
+Future<void> updateEmail(String newEmail) async {
+    try {
+      User user = _fbAuth.currentUser;
+
+      if (user != null) {
+        await user.updateEmail(newEmail);
+        Fluttertoast.showToast(msg: 'Email updated successfully');
+      }
+    } on FirebaseAuthException catch (e) {
+      Fluttertoast.showToast(msg: e.message, gravity: ToastGravity.TOP);
+    } catch (e) {
+      print(e.message);
+    }
+  }
+
+  Future<void> updatePassword(String newPassword) async {
+    try {
+      User user = _fbAuth.currentUser;
+
+      if (user != null) {
+        await user.updatePassword(newPassword);
+        Fluttertoast.showToast(msg: 'Password updated successfully');
+      }
+    } on FirebaseAuthException catch (e) {
+      Fluttertoast.showToast(msg: e.message, gravity: ToastGravity.TOP);
+    } catch (e) {
+      print(e.message);
+    }
+  }
 } //FirebaseAuthService

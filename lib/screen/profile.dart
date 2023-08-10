@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'updateprofile.dart';
+
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -73,13 +75,13 @@ class _ProfilePageState extends State<ProfilePage> {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              // Navigate to the update profile page when the button is pressed
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => UpdateProfilePage(),
-              //   ),
-              // );
+              //Navigate to the update profile page when the button is pressed
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UpdateProfilePage(),
+                ),
+              );
             },
             child: Text('Update Profile'),
           ),
