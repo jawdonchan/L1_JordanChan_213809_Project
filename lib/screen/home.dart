@@ -3,6 +3,7 @@ import 'package:proj_layout/bus/home.dart';
 import 'package:proj_layout/busStops/JsonParseBusStop.dart';
 import 'package:proj_layout/main.dart';
 import 'package:proj_layout/screen/card_list.dart';
+import 'ChooseCard.dart';
 import 'nextpage.dart';
 import 'login.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     BusStopsJsonParse(), // Replace Page1, Page2, Page3, and Page4 with your actual pages.
     Page2(),
-    CardListPage(),
+    ChooseCardTypePage(),
     ServicesPage(),
   ];
 

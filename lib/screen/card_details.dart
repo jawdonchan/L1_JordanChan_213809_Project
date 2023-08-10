@@ -13,11 +13,13 @@ class CardDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Card Details'),
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1.0),
+        borderRadius: BorderRadius.circular(10),
       ),
-      body: Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -28,6 +30,12 @@ class CardDetailsPage extends StatelessWidget {
           Text(cardDescription),
           SizedBox(height: 10),
           Text(cardApplication),
+          // ElevatedButton(
+          //   onPressed: () {
+          //     Navigator.pop(context, cardName); // Return the selected card type
+          //   },
+          //   child: Text('Select Card Type'),
+          // ),
         ],
       ),
     );
