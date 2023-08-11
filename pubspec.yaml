@@ -26,7 +26,7 @@ dependencies:
   provider:
   firebase_storage: 
   image_picker: 
-  file_picker:
+  
   permission_handler:
   # url_launcher:
   flutter_speed_dial:
