@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:proj_layout/services/firebaseauth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+
 
 class UpdateProfilePage extends StatefulWidget {
   @override
@@ -13,6 +17,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   TextEditingController _newEmailController = TextEditingController();
   TextEditingController _newPasswordController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  File _image; // For storing the selected image
+
+  // Function to pick an image from the gallery
+  Future _pickImage() async {
+    final pickedImage = await ImagePicker().getImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +72,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   if (newPassword.isNotEmpty) {
                     await FirebaseAuthService().updatePassword(newPassword);
                   }
-                  
-                  String profilePicUrl = "https://example.com/profile.jpg";
+
+                  // Upload the profile picture to Firebase Storage
+                  String profilePicUrl = '';
+                  if (_image != null) {
+                    // Upload the image and get the download URL
+                    // Replace 'profiles' with your desired storage path
+                    Reference storageRef = FirebaseStorage.instance.ref().child('profiles/${_image.path}');
+                    UploadTask uploadTask = storageRef.putFile(_image);
+                    await uploadTask.whenComplete(() async {
+                      profilePicUrl = await storageRef.getDownloadURL();
+                    });
+                  }
 
                   // Add a new document in the "User Details" collection
                   await FirebaseFirestore.instance.collection('User Details').add({
@@ -75,6 +101,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 },
                 child: Text('Update Profile'),
               ),
+              SizedBox(height: 20.0),
+              ElevatedButton(
+                onPressed: _pickImage,
+                child: Text('Pick Profile Picture'),
+              ),
+              if (_image != null) Image.file(_image), // Show selected image
             ],
           ),
         ),
