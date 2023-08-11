@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:proj_layout/bus/home.dart';
 import 'package:proj_layout/busStops/JsonParseBusStop.dart';
-import 'package:proj_layout/main.dart';
 import 'package:proj_layout/screen/card_user.dart';
-import 'card_choose.dart';
+import 'package:proj_layout/screen/picture.dart';
 import 'login.dart';
 import 'package:provider/provider.dart';
 import 'services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // for user auth
+import 'package:cloud_firestore/cloud_firestore.dart'; // for collection in db
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,11 +17,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   String _pageTitle = 'Home'; // Initial title
-  String userEmail;
+ 
   final List<Widget> _pages = [
     BusStopsJsonParse(), // Replace Page1, Page2, Page3, and Page4 with your actual pages.
+    UploadFilePage(),
     UserCardsPage(),
-    ChooseCardTypePage(),
     ServicesPage(),
   ];
 
@@ -68,39 +68,62 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(color: Colors.black), // Set the text color
         ),
          actions: [
-          StreamBuilder<User>(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (!snapshot.hasData || snapshot.data == null) {
-                return Text('Not Logged In');
-              }
+         StreamBuilder<User>(
+  stream: FirebaseAuth.instance.authStateChanges(),
+  builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return CircularProgressIndicator();
+    } else if (!snapshot.hasData || snapshot.data == null) {
+      return Text('Not Logged In');
+    }
 
-              final user = snapshot.data;
-            userEmail = user.email; // Store the user's email
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.blueAccent,
-                    radius: 16,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    user.email,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                ],
-              );
-            },
-          ),
+    final user = snapshot.data;
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('User Details')
+          .where('email', isEqualTo: user.email)
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> userSnapshot) {
+        if (userSnapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (!userSnapshot.hasData || userSnapshot.data.docs.isEmpty) {
+          return Text('Profile Not Found');
+        }
+
+        final userData = userSnapshot.data.docs[0];
+
+        String username = userData.get('name') ?? 'N/A';
+        String profilePicUrl = userData.get('profilepic') ?? '';
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              backgroundImage: profilePicUrl.isNotEmpty
+                  ? NetworkImage(profilePicUrl)
+                  : NetworkImage('https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/profile%2Fdefault.jpg?alt=media&token=33a2f9e5-35be-42ff-8ac8-2dd8cdb69bf8'),
+              backgroundColor: Colors.blueAccent,
+              radius: 16,
+            ),
+            SizedBox(width: 8),
+            Text(
+              username,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(width: 16),
+          ],
+        );
+      },
+    );
+  },
+),
+
         ],
         // title: Text('My App'),
       ),
