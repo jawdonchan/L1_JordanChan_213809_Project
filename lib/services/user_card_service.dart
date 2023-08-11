@@ -15,7 +15,7 @@ class UserCardService {
             .doc(currentUser.uid)
             .set({
           'email': currentUser.email,
-          'cardType': cardType,
+          'type': cardType,
         });
       }
     } catch (e) {
