@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 
-
 class UpdateProfilePage extends StatefulWidget {
   @override
   _UpdateProfilePageState createState() => _UpdateProfilePageState();
@@ -17,12 +16,13 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   TextEditingController _newEmailController = TextEditingController();
   TextEditingController _newPasswordController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  String _profilePicUrl = '';
   File _image; // For storing the selected image
 
   // Function to pick an image from the gallery
   Future _pickImage() async {
-    final pickedImage = await ImagePicker().getImage(source: ImageSource.gallery);
+    final pickedImage =
+        await ImagePicker().getImage(source: ImageSource.gallery);
     if (pickedImage != null) {
       setState(() {
         _image = File(pickedImage.path);
@@ -74,33 +74,55 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   }
 
                   // Upload the profile picture to Firebase Storage
-                  String profilePicUrl = '';
+                  String profilePicUrl =
+                      _profilePicUrl; // Keep the current URL as default
                   if (_image != null) {
                     // Upload the image and get the download URL
-                    // Replace 'profiles' with your desired storage path
-                    Reference storageRef = FirebaseStorage.instance.ref().child('profiles/${_image.path}');
+                    Reference storageRef = FirebaseStorage.instance
+                        .ref()
+                        .child('profile/${_image.path}');
                     UploadTask uploadTask = storageRef.putFile(_image);
                     await uploadTask.whenComplete(() async {
                       profilePicUrl = await storageRef.getDownloadURL();
                     });
                   }
 
-                  // Add a new document in the "User Details" collection
-                  await FirebaseFirestore.instance.collection('User Details').add({
-                    'name': _newNameController.text.trim(),
-                    'email': newEmail.isNotEmpty ? newEmail : FirebaseAuth.instance.currentUser.email,
-                    'profilepic': profilePicUrl,
-                  });
+                  // Update the existing user details document in Firestore
+                  QuerySnapshot userDetailsSnapshot = await FirebaseFirestore
+                      .instance
+                      .collection('User Details')
+                      .where('email',
+                          isEqualTo: FirebaseAuth.instance.currentUser.email)
+                      .get();
 
-                  // Show a success message using a SnackBar
-                  _scaffoldKey.currentState.showSnackBar(
-                    SnackBar(content: Text('Profile updated successfully')),
-                  );
+                  if (userDetailsSnapshot.docs.isNotEmpty) {
+                    DocumentSnapshot userDetailsDoc =
+                        userDetailsSnapshot.docs[0];
+                    Map<String, dynamic> updatedData = {};
 
-                  Navigator.pop(context); // Navigate back after updating
+                    if (_newNameController.text.isNotEmpty) {
+                      updatedData['name'] = _newNameController.text.trim();
+                    }
+                    if (newEmail.isNotEmpty) {
+                      updatedData['email'] = newEmail;
+                    }
+                    if (profilePicUrl.isNotEmpty) {
+                      updatedData['profilepic'] = profilePicUrl;
+                    }
+
+                    await userDetailsDoc.reference.update(updatedData);
+
+                    // Show a success message using a SnackBar
+                    _scaffoldKey.currentState.showSnackBar(
+                      SnackBar(content: Text('Profile updated successfully')),
+                    );
+
+                    Navigator.pop(context); // Navigate back after updating
+                  }
                 },
                 child: Text('Update Profile'),
               ),
+
               SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: _pickImage,
