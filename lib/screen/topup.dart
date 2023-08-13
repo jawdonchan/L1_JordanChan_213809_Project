@@ -1,34 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:proj_layout/services/user_card_service.dart';
 
-class TopUpPage extends StatelessWidget {
-  final String userEmail = 'user@example.com'; // Replace with the actual user's email
-  final double topUpValue = 50.0; // Replace with the actual top-up value
+class AddValuePage extends StatefulWidget {
+  final String userEmail;
+  AddValuePage({this.userEmail});
 
   @override
-  Widget build(BuildContext context) {
-    UserCardService userCardService = UserCardService();
+  _AddValuePageState createState() => _AddValuePageState();
+}
 
+class _AddValuePageState extends State<AddValuePage> {
+  TextEditingController _valueController = TextEditingController();
+
+ void _addValueToCard() {
+  double valueToAdd = double.tryParse(_valueController.text) ?? 0.0;
+  print("Value to add: $valueToAdd");
+  if (valueToAdd > 0) {
+    // Use UserCardService to add value to the card
+    UserCardService().addValueToCard(widget.userEmail, valueToAdd);
+
+    // Navigate back to the previous page after adding value
+    Navigator.pop(context);
+  }
+}
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Top Up Page'),
+        title: Text('Add Value to Card'),
       ),
-      body: Center(
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Top Up Your Card',
-              style: TextStyle(fontSize: 20),
+            TextField(
+              controller: _valueController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Value to Add',
+              ),
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () async {
-                // Call the addValueToCard method
-                await userCardService.addValueToCard(userEmail, topUpValue);
-                // Show success message or navigate back
-              },
-              child: Text('Top Up'),
+              onPressed: _addValueToCard,
+              child: Text('Add Value'),
             ),
           ],
         ),

@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:proj_layout/screen/home.dart'; 
 import 'package:proj_layout/screen/profile.dart'; 
+import 'topup.dart';
 import 'about.dart';
 import 'email.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:search.dart'; 
 
-
+final FirebaseAuth _auth = FirebaseAuth.instance;
+User currentUser = _auth.currentUser;
+final userEmail = currentUser.email;
 class ServicesPage extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,10 +60,12 @@ class ServicesPage extends StatelessWidget {
                     icon: Icons.attach_money_rounded,
                     title: 'Top Up',
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => FavoritesPage()),
-                      // );
+                      Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddValuePage(userEmail: userEmail),
+            ),
+          );
                     },
                   ),
                   _iconWithBorder(

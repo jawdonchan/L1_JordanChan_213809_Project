@@ -22,4 +22,18 @@ class UserCardService {
       print('Error adding user card: $e');
     }
   }
+   // Method to add a value to the user's card document
+  Future<void> addValueToCard(String userEmail, double value) async {
+    
+    try {
+      User currentUser = _auth.currentUser;
+      await _firestore
+           .collection('User\'s Card Collection')
+            .doc(currentUser.uid)
+          .update({'value': FieldValue.increment(value)});
+    } catch (e) {
+      print('Error adding value to card: $e');
+    }
+  }
 }
+
