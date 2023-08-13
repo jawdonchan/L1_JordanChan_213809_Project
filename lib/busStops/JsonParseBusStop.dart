@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'httpservice.dart';
 import 'BusStop.dart';
+import 'BusStopMap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 
 
 class BusStopsJsonParse extends StatefulWidget {
@@ -40,8 +42,19 @@ class _BusStopsJsonParseState extends State<BusStopsJsonParse> {
     });
   }
 
-  // Add this variable to hold the map controller
-  GoogleMapController _mapController;
+void _navigateToMapPage(double latitude, double longitude) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MapPage(
+          latitude: latitude,
+          longitude: longitude,
+        ),
+      ),
+    );
+  }
+
+
 
  @override
   Widget build(BuildContext context) {
@@ -54,7 +67,11 @@ class _BusStopsJsonParseState extends State<BusStopsJsonParse> {
               itemCount: null == _cp ? 0 : _cp.length,
               itemBuilder: (context, index) {
                 Value cpAvail = _cp[index];
-                return Card(
+                return GestureDetector(
+                  onTap: () {
+                    _navigateToMapPage(cpAvail.latitude, cpAvail.longitude);
+                  },
+                  child: Card(
                   child: Padding(
                     padding: EdgeInsets.all(10.0),
                     child: Column(
@@ -72,46 +89,25 @@ class _BusStopsJsonParseState extends State<BusStopsJsonParse> {
                             Text(
                               'Location: ' + cpAvail.roadName,
                               style: TextStyle(
-                                  fontSize: 9.0, color: Colors.black87, fontWeight: FontWeight.bold),
+                                  fontSize: 14.0, color: Colors.black87, fontWeight: FontWeight.bold),
                             ),
                             Text(
                               'Description: ' + cpAvail.description.toString(),
                               style: TextStyle(fontSize: 14.0, color: Colors.black87),
                             ),
+                             Icon(
+                                Icons.map, // Add an icon indicating the map
+                                color: Colors.blue,
+                              ),
                           ],
                         ),
                         SizedBox(height: 10.0), // Added spacing for the map
 
-                        // Add a GoogleMap widget to display the map
-                        Container(
-                          height: 200, // Adjust the height as needed
-                          child: GoogleMap(
-                            initialCameraPosition: CameraPosition(
-                              target: LatLng(
-                                cpAvail.latitude, // Replace with your BusStop's latitude
-                                cpAvail.longitude, // Replace with your BusStop's longitude
-                              ),
-                              zoom: 15.0,
-                            ),
-                            onMapCreated: (controller) {
-                              setState(() {
-                                _mapController = controller;
-                              });
-                            },
-                            markers: Set<Marker>.from([
-                              Marker(
-                                markerId: MarkerId(cpAvail.busStopCode), // Use a unique ID
-                                position: LatLng(
-                                  cpAvail.latitude, // Replace with your BusStop's latitude
-                                  cpAvail.longitude, // Replace with your BusStop's longitude
-                                ),
-                              ),
-                            ]),
-                          ),
-                        ),
+                       
                       ],
                     ),
                   ),
+                ),
                 );
               },
             ),

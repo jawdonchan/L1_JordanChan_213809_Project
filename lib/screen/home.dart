@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
         if (userSnapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         } else if (!userSnapshot.hasData || userSnapshot.data.docs.isEmpty) {
-          return Text('Profile Not Found');
+          return Text('Profile Not Made');
         }
 
         final userData = userSnapshot.data.docs[0];

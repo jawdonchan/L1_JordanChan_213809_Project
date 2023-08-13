@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'topup.dart';
 import 'card_choose.dart';
 
 class UserCardsPage extends StatelessWidget {
@@ -110,14 +110,20 @@ class UserCardsPage extends StatelessWidget {
               ),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              // Implement your logic here to add value to the card
-              // This will be executed when the button is pressed
-            },
-            child: Icon(Icons.attach_money_rounded),
-            backgroundColor: Colors.teal,
-          ),
+         floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigate to the Add Value page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddValuePage(userEmail: userEmail),
+            ),
+          );
+        },
+        child: Icon(Icons.attach_money_rounded),
+        backgroundColor: Colors.teal,
+      ),
+
         );
       },
     );
