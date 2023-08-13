@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proj_layout/screen/home.dart'; 
 import 'package:proj_layout/screen/profile.dart'; 
 import 'topup.dart';
+import 'maps.dart';
 import 'about.dart';
 import 'email.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -84,10 +85,10 @@ class ServicesPage extends StatelessWidget {
                     icon: Icons.location_pin,
                     title: 'Location',
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => SearchPage()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MapScreen()),
+                      );
                     },
                   ),
                   _iconWithBorder(
