@@ -25,6 +25,7 @@ class MapScreen extends StatelessWidget {
             infoWindow: InfoWindow(title: 'Bras Basah Cplx'),
           ),
         },
+       
       ),
     );
   }
