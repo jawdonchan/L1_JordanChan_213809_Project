@@ -26,7 +26,7 @@ dependencies:
   provider:
   firebase_storage: 
   image_picker: 
-  
+  google_maps_flutter:
   permission_handler:
   # url_launcher:
   flutter_speed_dial:

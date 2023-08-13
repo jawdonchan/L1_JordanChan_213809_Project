@@ -29,20 +29,20 @@ class UserCardsPage extends StatelessWidget {
           //   title: Text('Your Cards'),
           // ),
           body: Column(
-             crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               Padding(
-            padding: EdgeInsets.all(18.0),
-            child: Text(
-              'Your Card:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+              Padding(
+                padding: EdgeInsets.all(18.0),
+                child: Text(
+                  'Your Card:',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-          ),
               Expanded(
-                  child: StreamBuilder<QuerySnapshot>(
+                child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection("User's Card Collection")
                       .where('email', isEqualTo: userEmail)
@@ -63,27 +63,27 @@ class UserCardsPage extends StatelessWidget {
                     List<DocumentSnapshot> userCardDocs = snapshot.data.docs;
 
                     if (userCardDocs.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('No cards found.'),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigate to the Choose Card page
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChooseCardTypePage(),
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('No cards found.'),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Navigate to the Choose Card page
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChooseCardTypePage(),
+                                  ),
+                                );
+                              },
+                              child: Text('Choose Card'),
                             ),
-                          );
-                        },
-                        child: Text('Choose Card'),
-                      ),
-                    ],
-                  ),
-                );
-              }
+                          ],
+                        ),
+                      );
+                    }
 
                     return ListView.builder(
                       itemCount: userCardDocs.length,
@@ -101,7 +101,6 @@ class UserCardsPage extends StatelessWidget {
                           child: ListTile(
                             title: Text('Card Type: ${userCardData['type']}'),
                             subtitle: Text('Email: ${userCardData['email']}'),
-                            
                           ),
                         );
                       },
@@ -111,13 +110,13 @@ class UserCardsPage extends StatelessWidget {
               ),
             ],
           ),
-           floatingActionButton: FloatingActionButton(
+          floatingActionButton: FloatingActionButton(
             onPressed: () {
               // Implement your logic here to add value to the card
               // This will be executed when the button is pressed
             },
             child: Icon(Icons.attach_money_rounded),
-            backgroundColor: Colors.teal, 
+            backgroundColor: Colors.teal,
           ),
         );
       },
