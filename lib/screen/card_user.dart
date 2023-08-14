@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'card_update.dart';
 import 'topup.dart';
 import 'card_choose.dart';
 
@@ -22,6 +23,7 @@ class UserCardsPage extends StatelessWidget {
         }
 
         final user = snapshot.data;
+        final userId = user.uid;
         final userEmail = user.email;
 
         return Scaffold(
@@ -32,7 +34,7 @@ class UserCardsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.all(18.0),
+                padding: EdgeInsets.all(15.0),
                 child: Text(
                   'Your Card:',
                   style: TextStyle(
@@ -65,7 +67,6 @@ class UserCardsPage extends StatelessWidget {
                     if (userCardDocs.isEmpty) {
                       return Center(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text('No cards found.'),
                             ElevatedButton(
@@ -91,17 +92,88 @@ class UserCardsPage extends StatelessWidget {
                         Map<String, dynamic> userCardData =
                             userCardDocs[index].data() as Map<String, dynamic>;
 
-                        return Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 1.0),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          margin:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                          child: ListTile(
-                            title: Text('Card Type: ${userCardData['type']}'),
-                            subtitle: Text('Email: ${userCardData['email']}'),
-                          ),
+                        String expiryDate = userCardData['expiryDate'];
+          if (expiryDate == null) {
+            expiryDate = 'Not Set';
+          }
+                        return Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.grey, width: 1.0),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ListTile(
+                                    title: Text(
+                                        'Concession Card'),
+                                    subtitle:
+                                        Text('Email: ${userCardData['email']}'),
+                                  ),
+                                  Divider(), // Add a divider line
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(8,0,8,0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            'Card Type: ${userCardData['type']}'),
+                                        Text(
+                                            'Balance:'), // Display the balance here
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 6,),
+                                  Padding(
+                                   padding: const EdgeInsets.fromLTRB(8,0,16,0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                         // Replace with actual row content
+                                        Text(
+                                            'Find My Line', style: TextStyle(fontStyle: FontStyle.italic),),
+                                            Text(
+                                            '\$${userCardData['value']}'),
+                                      ],
+                                    ),
+                                  ),
+                                 SizedBox(height: 6,),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(8,0,8,10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                         Text('Expiry Date: $expiryDate'),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Navigate to UpdateCardPage and pass the user ID and email
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UpdateCardPage(
+                                    
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text('Update Card'),
+                            ),
+
+                          ],
                         );
                       },
                     );
@@ -110,20 +182,19 @@ class UserCardsPage extends StatelessWidget {
               ),
             ],
           ),
-         floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigate to the Add Value page
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddValuePage(userEmail: userEmail),
-            ),
-          );
-        },
-        child: Icon(Icons.attach_money_rounded),
-        backgroundColor: Colors.teal,
-      ),
-
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              // Navigate to the Add Value page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddValuePage(userEmail: userEmail),
+                ),
+              );
+            },
+            child: Icon(Icons.attach_money_rounded),
+            backgroundColor: Colors.teal,
+          ),
         );
       },
     );

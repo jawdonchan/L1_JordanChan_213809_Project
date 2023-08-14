@@ -111,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Password:',
-                  style: TextStyle(fontSize: 25),
+                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
                 ),
               ),
               Padding(

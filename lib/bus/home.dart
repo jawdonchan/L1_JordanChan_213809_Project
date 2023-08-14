@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePageBS> {
                                           fontSize: 16.0,
                                           color: Colors.black),
                                     ),
-                         SizedBox(height: 5.0),
+                                      SizedBox(height: 5.0),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
