@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-
 import 'package:proj_layout/bus/httpservice.dart';
 import 'package:proj_layout/bus/BusStopArrival.dart';
 import 'JsonParseBusArrival.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 class HomePageBS extends StatefulWidget {
   HomePageBS({Key key}) : super(key: key);
   @override
@@ -24,20 +25,58 @@ class Debouncer {
 }
 
 class _HomePageState extends State<HomePageBS> {
-  TextEditingController _controller = new TextEditingController();
+  TextEditingController _controller = TextEditingController();
   final debouncer = Debouncer(msecond: 1000);
   List<Service> _cp;
-  bool _loading;
-  @override
-  void initState() {
-    super.initState();
-    _loading = true;
-    HttpService.getBusStop(_controller.toString()).then((cp) {
+  bool _loading = false; // Set loading to false initially
+
+  void _searchBusServices(String searchQuery) {
+    setState(() {
+      _loading = true;
+    });
+
+    HttpService.getBusStop(searchQuery).then((cp) {
       setState(() {
         _cp = cp;
         _loading = false;
       });
     });
+  }
+
+ void _addToFavorites(String serviceNo) async {
+    try {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final User user = auth.currentUser;
+
+      if (user != null) {
+        final String userId = user.uid;
+        final String userEmail = user.email; // Get user's email
+
+        final DocumentReference userRef = FirebaseFirestore.instance
+            .collection("User's Favourites")
+            .doc(userId);
+
+        final DocumentSnapshot userSnapshot = await userRef.get();
+
+        // Create a new document if user's document doesn't exist
+        if (!userSnapshot.exists) {
+          await userRef.set({
+            'email': userEmail, // Store user's email
+            'favorites': [serviceNo]
+          });
+        } else {
+          final List<String> favorites =
+              List<String>.from(userSnapshot.data()['favorites'] ?? []);
+
+          if (!favorites.contains(serviceNo)) {
+            favorites.add(serviceNo);
+            await userRef.update({'favorites': favorites});
+          }
+        }
+      }
+    } catch (e) {
+      print('Error adding favorite: $e');
+    }
   }
 
   @override
@@ -46,93 +85,100 @@ class _HomePageState extends State<HomePageBS> {
       appBar: AppBar(
         title: Text(_loading ? 'Loading...' : 'Bus Services'),
       ),
-      // body: home(),
       body: SingleChildScrollView(
-              child: Container(
-          padding: EdgeInsets.all(8.0),
+        child: Container(
+          padding: EdgeInsets.all(8.5),
           child: Center(
             child: Column(
               children: [
-                Padding(padding: EdgeInsets.fromLTRB(0, 40, 0, 0)),
-                // Image(
-                //   image: AssetImage('images/bus-service-icon.png'),
-                //   height: 180,
-                //   width: 180,
-                // ),
-                SizedBox(height: 50,),
+                Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
+                SizedBox(height: 20),
                 searchTF(),
-                SizedBox(height: 40,),
+                SizedBox(height: 40),
+                if (_loading)
+                  CircularProgressIndicator() // Show loading indicator while searching
+                else if (_cp != null && _cp.isNotEmpty)
+                  Column(
+                    children: _cp
+                        .map((cpAvail) => Card(
+                              child: Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Service No: ' +
+                                          cpAvail.serviceNo
+                                              .toString()
+                                              .split('.')
+                                              .last,
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          color: Colors.black),
+                                    ),
+                         SizedBox(height: 5.0),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Operator: ' +
+                                              cpAvail.serviceOperator,
+                                          style: TextStyle(
+                                              fontSize: 14.0,
+                                              color: Colors.black87),
+                                        ),
+                                      IconButton(
+                                              onPressed: () {
+                                                _addToFavorites(cpAvail.serviceNo.toString());
+                                              },
+                                              icon: Icon(
+                                                Icons.favorite,
+                                                color: Colors.red, // Customize the color of the heart icon
+                                              ),
+                                            ),
+
+
+                                      ],
+                                    ),
+                                    Text(
+                                       'Est Arrival: ' + cpAvail.nextBus.estimatedArrival.toString(),
+                                      style: TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.black87),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ))
+                        .toList(),
+                  )
+                else
+                  Text('No bus services found.'),
+                SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: _controller.clear,
+                      onPressed: () {
+                        _controller.clear();
+                        setState(() {
+                          _cp = null;
+                        });
+                      },
                       child: Text('Cancel'),
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => JsonParseBusArrvial(
-                                jsoncontroller:_controller.text,
-                              )),
-                        );
+                        if (_controller.text.isNotEmpty) {
+                          _searchBusServices(_controller.text);
+                        }
                       },
                       child: Text('Next'),
                     )
                   ],
                 ),
-                // Expanded(
-                //   child: ListView.builder(
-                //     itemCount: null == _cp ? 0 : _cp.length,
-                //     itemBuilder: (context, index) {
-                //       Service cpAvail = _cp[index];
-
-                //       return Card(
-                //         child: Padding(
-                //           padding: EdgeInsets.all(10.0),
-                //           child: Column(
-                //             mainAxisAlignment: MainAxisAlignment.start,
-                //             crossAxisAlignment: CrossAxisAlignment.start,
-                //             children: [
-                //               Text(
-                //                 'Service No: ' + cpAvail.serviceNo.toString().split('.').last,
-                //                 style:
-                //                     TextStyle(fontSize: 16.0, color: Colors.black),
-                //               ),
-                //               SizedBox(height: 5.0),
-                //               Row(
-                //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //                 children: [
-                //                   Text(
-                //                     'Est Arrival: ' + cpAvail.serviceOperator,
-                //                     style: TextStyle(
-                //                         fontSize: 14.0, color: Colors.black87,
-                //                         // fontWeight: FontWeight.bold
-                //                         ),
-                //                   ),
-                //                   Text(
-                //                     'Next Bus: ' +
-                //                         cpAvail.nextBus.toString(),
-                //                     style: TextStyle(
-                //                         fontSize: 14.0, color: Colors.black87),
-                //                   ),
-                //                 ],
-                //               ),
-                //                Text(
-                //                     'Next Bus Two: ' +
-                //                         cpAvail.nextBus2.toString(),
-                //                     style: TextStyle(
-                //                         fontSize: 14.0, color: Colors.black87),
-                //                   ),
-                //             ],
-                //           ),
-                //         ),
-                //       );
-                //     },
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -149,7 +195,7 @@ class _HomePageState extends State<HomePageBS> {
         border: OutlineInputBorder(),
         filled: true,
         fillColor: Colors.white60,
-        contentPadding: EdgeInsets.all(15.0),
+        contentPadding: EdgeInsets.all(5.0),
         hintText: 'Filter by Bus',
       ),
       onChanged: (string) {
@@ -165,36 +211,4 @@ class _HomePageState extends State<HomePageBS> {
   }
 }
 
-// Widget home() {
-//   return Center(
-//     child: Column(
-//       children: [
-//         Padding(padding: EdgeInsets.fromLTRB(0, 40, 0, 0)),
-//         Image(
-//           image: AssetImage('images/bus-service-icon.png'),
-//           height: 180,
-//           width: 180,
-//         ),
-//         TextFormField(
-//           decoration: InputDecoration(
-//             labelText: 'Bus Stop Code',
-//             border: OutlineInputBorder(),
-//             filled: true,
-//             fillColor: Colors.white60,
-//             contentPadding: EdgeInsets.all(15.0),
-//             hintText: 'Filter by Bus',
-//           ),
-//           onChanged: (string) {
-//             debouncer.run(() {
-//               HttpService.getBusStop().then((uCp) {
-//                 setState(() {
-//                   _cp = Service.filterList(uCp, string);
-//                 });
-//               });
-//             });
-//           },
-//         ),
-//       ],
-//     ),
-//   );
-// }
+

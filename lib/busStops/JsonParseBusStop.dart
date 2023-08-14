@@ -91,9 +91,13 @@ void _navigateToMapPage(double latitude, double longitude) {
                               style: TextStyle(
                                   fontSize: 14.0, color: Colors.black87, fontWeight: FontWeight.bold),
                             ),
+                            SizedBox(width: 10),
+                            Flexible(
+                            child:
                             Text(
                               'Description: ' + cpAvail.description.toString(),
                               style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                            ),
                             ),
                              Icon(
                                 Icons.map, // Add an icon indicating the map

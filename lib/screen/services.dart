@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proj_layout/screen/home.dart'; 
 import 'package:proj_layout/screen/profile.dart'; 
+import 'call.dart';
 import 'topup.dart';
 import 'maps.dart';
 import 'about.dart';
@@ -107,22 +108,22 @@ class ServicesPage extends StatelessWidget {
                     icon: Icons.call,
                     title: 'Call',
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => ProfilePage()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => CallPage()),
+                      );
                     },
                   ),
                   _iconWithBorder(
                     context,
                     icon: Icons.email,
                     title: 'Email',
-                    // onPressed: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(builder: (context) => EmailPage()),
-                    //   );
-                    // },
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EmailPage()),
+                      );
+                    },
                   ),
                   _iconWithBorder(
                     context,

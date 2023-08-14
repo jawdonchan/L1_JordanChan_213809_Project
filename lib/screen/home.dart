@@ -3,8 +3,9 @@ import 'package:proj_layout/bus/home.dart';
 import 'package:proj_layout/busStops/JsonParseBusStop.dart';
 import 'package:proj_layout/screen/card_user.dart';
 import 'package:proj_layout/screen/maps.dart';
-import 'login.dart';
+import 'user_favourites.dart';
 import 'package:provider/provider.dart';
+import 'profile.dart';
 import 'services.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // for user auth
 import 'package:cloud_firestore/cloud_firestore.dart'; // for collection in db
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
  
   final List<Widget> _pages = [
     BusStopsJsonParse(), // Replace Page1, Page2, Page3, and Page4 with your actual pages.
-    MapScreen(),
+    FavouritesPage(),
     UserCardsPage(),
     ServicesPage(),
   ];
@@ -100,12 +101,23 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircleAvatar(
-              backgroundImage: profilePicUrl.isNotEmpty
-                  ? NetworkImage(profilePicUrl)
-                  : NetworkImage('https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/profile%2Fdefault.jpg?alt=media&token=33a2f9e5-35be-42ff-8ac8-2dd8cdb69bf8'),
-              backgroundColor: Colors.blueAccent,
-              radius: 16,
+            InkWell(
+              onTap: () {
+              // Navigate to the user's profile page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(), // Replace with your profile page
+                ),
+              );
+            },
+              child: CircleAvatar(
+                backgroundImage: profilePicUrl.isNotEmpty
+                    ? NetworkImage(profilePicUrl)
+                    : NetworkImage('https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/profile%2Fdefault.jpg?alt=media&token=33a2f9e5-35be-42ff-8ac8-2dd8cdb69bf8'),
+                backgroundColor: Colors.blueAccent,
+                radius: 16,
+              ),
             ),
             SizedBox(width: 8),
             Text(
