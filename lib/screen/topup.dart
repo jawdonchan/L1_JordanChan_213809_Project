@@ -11,6 +11,20 @@ class AddValuePage extends StatefulWidget {
 
 class _AddValuePageState extends State<AddValuePage> {
   TextEditingController _valueController = TextEditingController();
+  double _currentCardValue = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCurrentCardValue();
+  }
+
+  Future<void> _loadCurrentCardValue() async {
+    double value = await UserCardService().getCurrentCardValue(widget.userEmail);
+    setState(() {
+      _currentCardValue = value;
+    });
+  }
 
   void _addValueToCard() {
     double valueToAdd = double.tryParse(_valueController.text) ?? 0.0;
@@ -19,8 +33,11 @@ class _AddValuePageState extends State<AddValuePage> {
       // Use UserCardService to add value to the card
       UserCardService().addValueToCard(widget.userEmail, valueToAdd);
 
-      // Navigate back to the previous page after adding value
-      Navigator.pop(context);
+      // Update the current card value after adding value
+      _loadCurrentCardValue();
+
+      // Clear the value controller
+      _valueController.clear();
     }
   }
 
@@ -57,6 +74,14 @@ class _AddValuePageState extends State<AddValuePage> {
               SizedBox(
                 height: 30,
               ),
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text(
+              //     'Current Card Value: $_currentCardValue', // Display current card value here
+              //     style: TextStyle(fontSize: 18),
+              //   ),
+              // ),
+              // SizedBox(height: 20),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(

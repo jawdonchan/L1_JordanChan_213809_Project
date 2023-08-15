@@ -7,6 +7,8 @@ import 'topup.dart';
 import 'maps.dart';
 import 'about.dart';
 import 'email.dart';
+import 'farecalculator.dart';
+import 'card_update.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:search.dart'; 
@@ -50,12 +52,12 @@ class ServicesPage extends StatelessWidget {
                   _iconWithBorder(
                     context,
                     icon: Icons.credit_card,
-                    title: 'Concession',
+                    title: 'Update Card',
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => SearchPage()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => UpdateCardPage()),
+                      );
                     },
                   ),
                   _iconWithBorder(
@@ -76,10 +78,10 @@ class ServicesPage extends StatelessWidget {
                     icon: Icons.calculate,
                     title: 'Fare Calculator',
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => SearchPage()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => FareCalculatorPage()),
+                      );
                     },
                   ),
                   _iconWithBorder(

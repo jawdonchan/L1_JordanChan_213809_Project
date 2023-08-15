@@ -35,5 +35,17 @@ class UserCardService {
       print('Error adding value to card: $e');
     }
   }
+
+  Future<double> getCurrentCardValue(String userEmail) async {
+    // Replace 'cards' with the actual collection name where user card values are stored
+    DocumentSnapshot cardSnapshot = await _firestore.collection('User\'s Card Collection').doc(userEmail).get();
+
+    if (cardSnapshot.exists) {
+      double currentCardValue = cardSnapshot.data()['value'] ?? 0.0;
+      return currentCardValue;
+    } else {
+      return 0.0;
+    }
+  }
 }
 

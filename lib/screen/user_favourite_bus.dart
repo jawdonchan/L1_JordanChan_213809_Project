@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:proj_layout/bus/home.dart';
-
+import 'package:proj_layout/bus/addFavManual.dart';
 class FavouriteServicesTab extends StatefulWidget {
   @override
   _FavouriteServicesTabState createState() => _FavouriteServicesTabState();
@@ -65,7 +65,7 @@ class _FavouriteServicesTabState  extends State<FavouriteServicesTab> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    HomePageBS()), // Replace with your HomePageBS class
+                    AddFavoriteBusStopPage()), // Replace with your HomePageBS class
           );
         },
         child: Icon(Icons.directions_bus),
