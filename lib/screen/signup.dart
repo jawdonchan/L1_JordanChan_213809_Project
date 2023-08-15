@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:proj_layout/screen/login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -15,59 +16,75 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isPasswordVisible = false; // hide password text
   bool _isDeclarationChecked = false; // for the checkbox
   void signUp() async {
-    try {
-      String email = _emailController.text;
-      String password = _passwordController.text;
-      String confirmPassword = _confirmPasswordController.text;
+  try {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    String confirmPassword = _confirmPasswordController.text;
 
-      if (email.isNotEmpty &&
-          password.isNotEmpty &&
-          confirmPassword.isNotEmpty) {
-        if (password == confirmPassword) {
-          UserCredential userCredential =
-              await _auth.createUserWithEmailAndPassword(
-            email: email,
-            password: password,
-          );
+    if (email.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty) {
+      if (password == confirmPassword) {
+        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
 
-          if (userCredential != null) {
-            // Successfully signed up, navigate to the next page
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
-            );
+        if (userCredential != null) {
+          // Check if user details document already exists
+          QuerySnapshot userDetailsSnapshot = await FirebaseFirestore.instance
+              .collection('User Details')
+              .where('email', isEqualTo: email)
+              .get();
+
+          if (userDetailsSnapshot.docs.isEmpty) {
+            // Create a new user details document
+            Map<String, dynamic> newUserData = {
+              'email': email,
+              'name': '', // You can add other fields here
+            };
+
+            await FirebaseFirestore.instance
+                .collection('User Details')
+                .doc(userCredential.user.uid) // Use user's UID as document ID
+                .set(newUserData);
           }
-        } else {
-          // Handle password mismatch
-          throw 'Passwords do not match';
+
+          // Successfully signed up, navigate to the next page
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
         }
       } else {
-        // Handle missing input fields
-        throw 'Please enter email and password';
+        // Handle password mismatch
+        throw 'Passwords do not match';
       }
-    } catch (error) {
-      // Handle signup error
-      print('Error signing up: $error');
-      // Display error message using a dialog or a snackbar
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Sign Up Error'),
-            content: Text(error.toString()),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+    } else {
+      // Handle missing input fields
+      throw 'Please enter email and password';
     }
+  } catch (error) {
+    // Handle signup error
+    print('Error signing up: $error');
+    // Display error message using a dialog or a snackbar
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Sign Up Error'),
+          content: Text(error.toString()),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {

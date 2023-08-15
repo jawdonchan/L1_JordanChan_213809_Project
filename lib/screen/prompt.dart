@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proj_layout/main.dart';
 import 'nextpage.dart';
 import 'login.dart';
+import 'signup.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -103,7 +104,7 @@ class PromptPage extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Button padding
                   ),
-                  child: Text('Login/Sign Up'),
+                  child: Text('Login'),
                 ),
               ),
               Container(
@@ -113,7 +114,7 @@ class PromptPage extends StatelessWidget {
                     // Navigate to the guest page when the button is pressed
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => NextPage()),
+                      MaterialPageRoute(builder: (context) => SignUpPage()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -127,7 +128,7 @@ class PromptPage extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Button padding
                   ),
-                  child: Text('Continue as Guest'),
+                  child: Text('Sign Up'),
                 ),
               ),
             ],

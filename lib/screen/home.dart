@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(color: Colors.black), // Set the text color
         ),
          actions: [
-         StreamBuilder<User>(
+        StreamBuilder<User>(
   stream: FirebaseAuth.instance.authStateChanges(),
   builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -80,22 +80,22 @@ class _HomePageState extends State<HomePage> {
 
     final user = snapshot.data;
 
-    return StreamBuilder<QuerySnapshot>(
+    return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
           .collection('User Details')
-          .where('email', isEqualTo: user.email)
+          .doc(user.uid) // Fetch document using user's UID
           .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> userSnapshot) {
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> userSnapshot) {
         if (userSnapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
-        } else if (!userSnapshot.hasData || userSnapshot.data.docs.isEmpty) {
+        } else if (!userSnapshot.hasData || !userSnapshot.data.exists) {
           return Text('Profile Not Made');
         }
 
-        final userData = userSnapshot.data.docs[0];
+        final userData = userSnapshot.data.data();
 
-        String username = userData.get('name') ?? 'N/A';
-        String profilePicUrl = userData.get('profilepic') ?? '';
+        String username = userData['name'] ?? 'N/A';
+        String profilePicUrl = userData['profilepic'] ?? '';
 
         return Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -103,14 +103,14 @@ class _HomePageState extends State<HomePage> {
           children: [
             InkWell(
               onTap: () {
-              // Navigate to the user's profile page
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfilePage(), // Replace with your profile page
-                ),
-              );
-            },
+                // Navigate to the user's profile page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePage(), // Replace with your profile page
+                  ),
+                );
+              },
               child: CircleAvatar(
                 backgroundImage: profilePicUrl.isNotEmpty
                     ? NetworkImage(profilePicUrl)
@@ -122,6 +122,8 @@ class _HomePageState extends State<HomePage> {
             SizedBox(width: 8),
             Text(
               username,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 14,
@@ -135,7 +137,6 @@ class _HomePageState extends State<HomePage> {
     );
   },
 ),
-
         ],
         // title: Text('My App'),
       ),

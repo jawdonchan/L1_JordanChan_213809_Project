@@ -75,7 +75,10 @@ class _UpdateCardPageState extends State<UpdateCardPage> {
                     'Change Card Type',
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
                   ),
-            StreamBuilder<QuerySnapshot>(
+                    
+               ],
+             ),
+             StreamBuilder<QuerySnapshot>(
                     stream:
                         FirebaseFirestore.instance.collection('Cards').snapshots(),
                     builder: (context, snapshot) {
@@ -129,8 +132,6 @@ class _UpdateCardPageState extends State<UpdateCardPage> {
                       );
                     },
                   ),
-               ],
-             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _loading ? null : _updateCardDetails,

@@ -33,7 +33,7 @@ class AboutPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'About My App',
+                  'About FetchMyLine',
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
@@ -42,7 +42,7 @@ class AboutPage extends StatelessWidget {
                 SizedBox(height: 20.0),
                 ExpansionTile(
                   title: Text(
-                    'What is My App?',
+                    'What is FetchMyLine?',
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
@@ -52,18 +52,18 @@ class AboutPage extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: Text(
-                        'My App is a powerful and user-friendly mobile application that aims to provide various features for its users. It helps users to stay organized, manage tasks, and track their progress efficiently.',
+                        'It is a platform where users can add in their favourite buses, check on their Concession Cards and many more features\n',
                         style: TextStyle(
                           fontSize: 16.0,
                         ),
                       ),
                     ),
                   ],
-                ),
-                SizedBox(height: 10.0),
+                ),//
+                
                 ExpansionTile(
                   title: Text(
-                    'Why use My App?',
+                    'Why use FetchMyLine?',
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
@@ -73,14 +73,74 @@ class AboutPage extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: Text(
-                        'My App offers a seamless user experience with an intuitive interface, making it easy to use for users of all skill levels. It\'s a reliable tool for organizing your tasks, setting reminders, and achieving your goals effectively.',
+                        'It offers simple user interface where it is a no brainer to use and apply for your daily essentials\n',
                         style: TextStyle(
                           fontSize: 16.0,
                         ),
                       ),
                     ),
                   ],
-                ),
+                ),//
+                ExpansionTile(
+                  title: Text(
+                    'Contact',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        'Developer\'s Contact: +65 8820 7062\n',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ), //
+                 ExpansionTile(
+                  title: Text(
+                    'Email',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        'Developer\'s Email: 213809N@mymail.nyp.edu.sg\n',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),//
+                 ExpansionTile(
+                  title: Text(
+                    'Developer Info',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        'Developer: Jordan Chan from L1\n',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),//
               ],
             ),
           ),

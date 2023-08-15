@@ -23,34 +23,34 @@ class _ProfilePageState extends State<ProfilePage> {
     _fetchUserDetails();
   }
 
-  Future<void> _fetchUserDetails() async {
-    try {
-      final userDetailsSnapshot = await FirebaseFirestore.instance
-          .collection('User Details')
-          .where('email', isEqualTo: _user.email)
-          .get();
+ Future<void> _fetchUserDetails() async {
+  try {
+    final userDetailsSnapshot = await FirebaseFirestore.instance
+        .collection('User Details')
+        .doc(_user.uid) // Fetch document using user's UID
+        .get();
 
-      if (userDetailsSnapshot.docs.isNotEmpty) {
-        final userDetails = userDetailsSnapshot.docs[0];
-        final name = userDetails['name'];
-        final profilePicUrl = userDetails['profilepic'];
+    if (userDetailsSnapshot.exists) {
+      final userDetails = userDetailsSnapshot.data();
+      final name = userDetails['name'];
+      final profilePicUrl = userDetails['profilepic'];
 
-        setState(() {
-          _username = name != null ? name : "N/A";
-          _profilePicUrl = profilePicUrl != null ? profilePicUrl : "";
-        });
-      }
-
-      // Fetch the user's display name from Firebase Authentication
-      if (_user.displayName != null) {
-        setState(() {
-          _username = _user.displayName;
-        });
-      }
-    } catch (e) {
-      print('Error fetching user details: $e');
+      setState(() {
+        _username = name != null ? name : "N/A";
+        _profilePicUrl = profilePicUrl != null ? profilePicUrl : "";
+      });
     }
+
+    // Fetch the user's display name from Firebase Authentication
+    if (_user.displayName != null) {
+      setState(() {
+        _username = _user.displayName;
+      });
+    }
+  } catch (e) {
+    print('Error fetching user details: $e');
   }
+}
 
   @override
   Widget build(BuildContext context) {
