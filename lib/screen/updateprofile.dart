@@ -34,8 +34,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey, // Set the scaffold key
-      appBar: AppBar(
-        title: Text('Update Profile'),
+       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios, // Use any custom icon here
+            color: Colors.black, // Set the desired color for the icon
+          ),
+          onPressed: () {
+            Navigator.pop(context); // Go back to the previous page
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -44,20 +54,37 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+                Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  'Update Profile',
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              SizedBox(height: 15,),
               TextField(
                 controller: _newNameController,
-                decoration: InputDecoration(labelText: 'Update Name'),
+                decoration: InputDecoration(labelText: 'Update Name',
+                border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                ),
+                
               ),
               SizedBox(height: 20.0),
               TextField(
                 controller: _newEmailController,
-                decoration: InputDecoration(labelText: 'Update Email'),
+                decoration: InputDecoration(labelText: 'Update Email',
+                border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30))),
               ),
               SizedBox(height: 20.0),
               TextField(
                 controller: _newPasswordController,
                 obscureText: true,
-                decoration: InputDecoration(labelText: 'Update Password'),
+                decoration: InputDecoration(labelText: 'Update Password',
+                border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30))),
               ),
               SizedBox(height: 20.0),
               ElevatedButton(
@@ -120,13 +147,35 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                     Navigator.pop(context); // Navigate back after updating
                   }
                 },
-                child: Text('Update Profile'),
+                child: Text('Update Profile', 
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                 style: ElevatedButton.styleFrom(
+                      primary: Colors.white, // Set the button background color
+                      onPrimary: Colors.white, // Set the text color
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 40.0,
+                          vertical: 10.0), // Set the button padding
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              8.0)), // Set the button border radius
+                    ),
               ),
 
               SizedBox(height: 20.0),
               ElevatedButton(
                 onPressed: _pickImage,
-                child: Text('Pick Profile Picture'),
+                child: Text('Pick Profile Picture', 
+                 style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                 style: ElevatedButton.styleFrom(
+                      primary: Colors.white, // Set the button background color
+                      onPrimary: Colors.white, // Set the text color
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 40.0,
+                          vertical: 10.0), // Set the button padding
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              8.0)), // Set the button border radius
+                    ),
               ),
               if (_image != null) Image.file(_image), // Show selected image
             ],

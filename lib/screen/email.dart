@@ -45,40 +45,73 @@ class _EmailPageState extends State<EmailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Email Page'),
+     appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios, // Use any custom icon here
+            color: Colors.black, // Set the desired color for the icon
+          ),
+          onPressed: () {
+            Navigator.pop(context); // Go back to the previous page
+          },
+        ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _toController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: 'To',
+      body: SingleChildScrollView(
+              child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+                Align(
+            alignment: Alignment.topLeft,
+            child: 
+               Text(
+                'Email',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                textAlign: TextAlign.left,
               ),
             ),
-            TextField(
-              controller: _subjectController,
-              decoration: InputDecoration(
-                labelText: 'Subject',
+            SizedBox(height: 15,),
+              TextField(
+                controller: _toController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  labelText: 'To',
+                   border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                ),
               ),
-            ),
-            TextField(
-              controller: _messageController,
-              maxLines: 5,
-              decoration: InputDecoration(
-                labelText: 'Message',
+              SizedBox(height: 15,),
+              TextField(
+                controller: _subjectController,
+                decoration: InputDecoration(
+                  labelText: 'Subject',
+                   border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _sendEmail,
-              child: Text('Send Email'),
-            ),
-          ],
+              SizedBox(height: 15,),
+              TextField(
+                controller: _messageController,
+                maxLines: 5,
+                decoration: InputDecoration(
+                  labelText: 'Message',
+                   border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _sendEmail,
+                child: Text('Send Email'),
+              ),
+            ],
+          ),
         ),
       ),
     );

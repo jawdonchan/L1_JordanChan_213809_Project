@@ -56,14 +56,35 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios, // Use any custom icon here
+            color: Colors.black, // Set the desired color for the icon
+          ),
+          onPressed: () {
+            Navigator.pop(context); // Go back to the previous page
+          },
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15),
+              child: Text(
+                'Profile:',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                textAlign: TextAlign.left,
+              ),
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+            padding: const EdgeInsets.fromLTRB(15, 20, 15, 0),
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey, width: 2.0),
@@ -80,10 +101,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         border: Border.all(color: Colors.grey, width: 2.0),
                       ),
                       child: CircleAvatar(
-                        backgroundImage:
-                            _profilePicUrl != null && _profilePicUrl.isNotEmpty
-                                ? NetworkImage(_profilePicUrl)
-                                : NetworkImage('https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/profile%2Fdefault.jpg?alt=media&token=33a2f9e5-35be-42ff-8ac8-2dd8cdb69bf8'),
+                        backgroundImage: _profilePicUrl != null &&
+                                _profilePicUrl.isNotEmpty
+                            ? NetworkImage(_profilePicUrl)
+                            : NetworkImage(
+                                'https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/profile%2Fdefault.jpg?alt=media&token=33a2f9e5-35be-42ff-8ac8-2dd8cdb69bf8'),
                         radius: 50,
                       ),
                     ),

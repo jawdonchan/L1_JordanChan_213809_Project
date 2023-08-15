@@ -31,6 +31,7 @@ dependencies:
   permission_handler:
   url_launcher:
   flutter_speed_dial:
+  carousel_slider:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

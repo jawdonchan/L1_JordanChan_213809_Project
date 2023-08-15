@@ -13,14 +13,24 @@ class _UpdateCardPageState extends State<UpdateCardPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   TextEditingController _expiryDateController = TextEditingController();
   bool _loading = false;
-String selectedCardName;
-List<DocumentSnapshot> cardDocs;
+  String selectedCardName;
+  List<DocumentSnapshot> cardDocs;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Update Card'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(25.0),
@@ -57,61 +67,70 @@ List<DocumentSnapshot> cardDocs;
                 ),
               ),
             ),
+            SizedBox(height: 10),
+             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+               children: [
+                   Text(
+                    'Change Card Type',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+                  ),
+            StreamBuilder<QuerySnapshot>(
+                    stream:
+                        FirebaseFirestore.instance.collection('Cards').snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text('Error loading data'),
+                        );
+                      }
 
-          StreamBuilder<QuerySnapshot>(
-  stream: FirebaseFirestore.instance.collection('Cards').snapshots(),
-  builder: (context, snapshot) {
-    if (snapshot.hasError) {
-      return Center(
-        child: Text('Error loading data'),
-      );
-    }
+                      if (!snapshot.hasData) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
 
-    if (!snapshot.hasData) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
+                      cardDocs = snapshot.data.docs;
+                      List<String> cardNames = cardDocs
+                          .map((cardData) => cardData.data()['name'] as String)
+                          .toList();
 
-    cardDocs = snapshot.data.docs;
-    List<String> cardNames = cardDocs
-        .map((cardData) => cardData.data()['name'] as String)
-        .toList();
-
-    return Column(
-      children: [
-        DropdownButton<String>(
-          value: selectedCardName,
-          hint: Text('Select a card'),
-          onChanged: (newValue) {
-            setState(() {
-              selectedCardName = newValue;
-            });
-          },
-          items: cardNames.map((cardName) {
-            return DropdownMenuItem<String>(
-              value: cardName,
-              child: Text(cardName),
-            );
-          }).toList(),
-        ),
-        if (selectedCardName != null)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text('Selected Card: $selectedCardName'),
-                  // Add more card details here
-                ],
-              ),
-            ),
-          ),
-      ],
-    );
-  },
-),
-
+                      return Column(
+                        children: [
+                          DropdownButton<String>(
+                            value: selectedCardName,
+                            hint: Text('Select a card'),
+                            onChanged: (newValue) {
+                              setState(() {
+                                selectedCardName = newValue;
+                              });
+                            },
+                            items: cardNames.map((cardName) {
+                              return DropdownMenuItem<String>(
+                                value: cardName,
+                                child: Text(cardName),
+                              );
+                            }).toList(),
+                          ),
+                          if (selectedCardName != null)
+                            Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Text('Selected Card: $selectedCardName'),
+                                    // Add more card details here
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+               ],
+             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: _loading ? null : _updateCardDetails,
@@ -122,39 +141,57 @@ List<DocumentSnapshot> cardDocs;
       ),
     );
   }
-Future<void> _updateCardDetails() async {
-  setState(() {
-    _loading = true;
-  });
 
-  try {
-    final User user = _auth.currentUser;
+  Future<void> _updateCardDetails() async {
+    setState(() {
+      _loading = true;
+    });
 
-    if (user != null) {
-      final String userId = user.uid;
+    try {
+      final User user = _auth.currentUser;
 
-      final DocumentReference userRef =
-          _firestore.collection("User's Card Collection").doc(userId);
+      if (user != null) {
+        final String userId = user.uid;
 
-      Map<String, dynamic> updateData = {};
+        final DocumentReference userRef =
+            _firestore.collection("User's Card Collection").doc(userId);
 
-      if (_expiryDateController.text.isNotEmpty) {
-        updateData['expiryDate'] = _expiryDateController.text;
+        Map<String, dynamic> updateData = {};
+
+        if (_expiryDateController.text.isNotEmpty) {
+          updateData['expiryDate'] = _expiryDateController.text;
+        }
+
+        if (selectedCardName != null) {
+          updateData['type'] = selectedCardName;
+        }
+
+        if (updateData.isNotEmpty) {
+          await userRef.update(updateData);
+        }
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Success'),
+            content: Text('Card information updated.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
       }
-
-      if (selectedCardName != null) {
-        updateData['type'] = selectedCardName;
-      }
-
-      if (updateData.isNotEmpty) {
-        await userRef.update(updateData);
-      }
-
+    } catch (e) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Success'),
-          content: Text('Card information updated.'),
+          title: Text('Error'),
+          content: Text('An error occurred while updating card information.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -165,27 +202,10 @@ Future<void> _updateCardDetails() async {
           ],
         ),
       );
+    } finally {
+      setState(() {
+        _loading = false;
+      });
     }
-  } catch (e) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Error'),
-        content: Text('An error occurred while updating card information.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
-  } finally {
-    setState(() {
-      _loading = false;
-    });
   }
-}
 }
