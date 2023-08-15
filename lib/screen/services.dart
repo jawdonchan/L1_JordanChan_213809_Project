@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:proj_layout/screen/home.dart'; 
 import 'package:proj_layout/screen/profile.dart'; 
 import 'call.dart';
+import 'reward.dart';
 import 'topup.dart';
 import 'maps.dart';
 import 'about.dart';
@@ -40,10 +41,10 @@ class ServicesPage extends StatelessWidget {
                     icon: Icons.redeem,
                     title: 'Reward',
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => HomePage()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RewardsPage()),
+                      );
                     },
                   ),
                   _iconWithBorder(
