@@ -27,6 +27,7 @@ class Debouncer {
 class _HomePageState extends State<HomePageBS> {
   TextEditingController _controller = TextEditingController();
   final debouncer = Debouncer(msecond: 1000);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<Service> _cp;
   bool _loading = false; // Set loading to false initially
 
@@ -44,46 +45,69 @@ class _HomePageState extends State<HomePageBS> {
   }
 
  void _addToFavorites(String serviceNo) async {
-    try {
-      final FirebaseAuth auth = FirebaseAuth.instance;
-      final User user = auth.currentUser;
+  try {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User user = auth.currentUser;
 
-      if (user != null) {
-        final String userId = user.uid;
-        final String userEmail = user.email; // Get user's email
+    if (user != null) {
+      final String userId = user.uid;
+      final String userEmail = user.email; // Get user's email
 
-        final DocumentReference userRef = FirebaseFirestore.instance
-            .collection("User's Favourites")
-            .doc(userId);
+      final DocumentReference userRef = FirebaseFirestore.instance
+          .collection("User's Favourites")
+          .doc(userId);
 
-        final DocumentSnapshot userSnapshot = await userRef.get();
+      final DocumentSnapshot userSnapshot = await userRef.get();
 
-        // Create a new document if user's document doesn't exist
-        if (!userSnapshot.exists) {
-          await userRef.set({
-            'email': userEmail, // Store user's email
-            'favorites': [serviceNo]
-          });
-        } else {
-          final List<String> favorites =
-              List<String>.from(userSnapshot.data()['favorites'] ?? []);
+      // Create a new document if user's document doesn't exist
+      if (!userSnapshot.exists) {
+        await userRef.set({
+          'email': userEmail, // Store user's email
+          'favorites': [serviceNo]
+        });
+      } else {
+        final List<String> favorites =
+            List<String>.from(userSnapshot.data()['favorites'] ?? []);
 
-          if (!favorites.contains(serviceNo)) {
-            favorites.add(serviceNo);
-            await userRef.update({'favorites': favorites});
-          }
+        if (!favorites.contains(serviceNo)) {
+          favorites.add(serviceNo);
+          await userRef.update({'favorites': favorites});
+
+           // Show SnackBar when a bus service is added to favorites
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('Added to Favorites'),
+          duration: Duration(seconds: 2), // Set the duration for the SnackBar
+        ),
+      );
         }
       }
-    } catch (e) {
-      print('Error adding favorite: $e');
     }
+  } catch (e) {
+    print('Error adding favorite: $e');
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_loading ? 'Loading...' : 'Bus Services'),
+       key: _scaffoldKey, // Set the scaffold key
+      // appBar: AppBar(
+      //   title: Text(_loading ? 'Loading...' : 'Bus Services'),
+      // ),
+       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios, // Use any custom icon here
+            color: Colors.black, // Set the desired color for the icon
+          ),
+          onPressed: () {
+            Navigator.pop(context); // Go back to the previous page
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -91,6 +115,15 @@ class _HomePageState extends State<HomePageBS> {
           child: Center(
             child: Column(
               children: [
+                 Align(
+            alignment: Alignment.topLeft,
+            child: 
+               Text(
+                'Search Bus',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+                textAlign: TextAlign.left,
+              ),
+            ),
                 Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
                 SizedBox(height: 20),
                 searchTF(),

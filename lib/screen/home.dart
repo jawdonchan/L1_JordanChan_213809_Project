@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   String _pageTitle = 'Home'; // Initial title
  
   final List<Widget> _pages = [
-    BusStopsJsonParse(), // Replace Page1, Page2, Page3, and Page4 with your actual pages.
+    BusStopsJsonParse(), 
     FavouritesPage(),
     UserCardsPage(),
     ServicesPage(),
@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
-        selectedItemColor: Colors.blue, // Change the selected icon color here
+        selectedItemColor: Colors.deepPurple, // Change the selected icon color here
         unselectedItemColor:
             Colors.grey, // Change the unselected icon color here
         items: [

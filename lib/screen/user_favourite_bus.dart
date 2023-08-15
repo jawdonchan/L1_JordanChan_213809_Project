@@ -68,7 +68,8 @@ class _FavouriteServicesTabState  extends State<FavouriteServicesTab> {
                     HomePageBS()), // Replace with your HomePageBS class
           );
         },
-        child: Icon(Icons.arrow_forward),
+        child: Icon(Icons.directions_bus),
+         backgroundColor: Colors.teal,
       ),
     );
   }

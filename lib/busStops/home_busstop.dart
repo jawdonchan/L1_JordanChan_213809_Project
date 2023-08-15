@@ -52,13 +52,6 @@ void _navigateToMapPage(double latitude, double longitude) {
     );
   }
 
-    final List<String> imageUrls = [
-    'https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/banner%2Fmrt.jpg?alt=media&token=2c34b966-4dab-4d1e-9445-df6289b4b56b',
-    'https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/banner%2Fneline.png?alt=media&token=51691724-d59b-4c7c-b6d2-a366a11af672',
-    'https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/banner%2Fweb_banner.jpg?alt=media&token=770edc82-fced-4b45-a398-571f51d58306',
-    'https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/banner%2Fbanner2.png?alt=media&token=9ff9ed6b-3af8-447c-9d2c-4fd903a35b5c',
-  ];
-
    @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,16 +59,17 @@ void _navigateToMapPage(double latitude, double longitude) {
         children: [
            CarouselSlider(
                 items: [
-                  'https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/banner%2Fweb_banner.jpg?alt=media&token=770edc82-fced-4b45-a398-571f51d58306',
+                  'https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/banner%2Fbanner1.png?alt=media&token=8e4589a5-6524-42a6-999d-6b3c746487b4',
                   'https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/banner%2Fbanner2.png?alt=media&token=9ff9ed6b-3af8-447c-9d2c-4fd903a35b5c',
-                  'https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/banner%2Fmrt.jpg?alt=media&token=2c34b966-4dab-4d1e-9445-df6289b4b56b',
+                  'https://firebasestorage.googleapis.com/v0/b/findmyline-c419e.appspot.com/o/banner%2Fweb_banner.jpg?alt=media&token=770edc82-fced-4b45-a398-571f51d58306',
                 ].map((imageUrl) {
-                  return Container(
-                    width: 650,
+                  return Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Container(
                       padding: EdgeInsets.all(8.5),
                       decoration: BoxDecoration(
-                        // border: Border.all(color: Colors.black, width: 2),
-                        // borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.black, width: 2),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6.0),
@@ -84,7 +78,7 @@ void _navigateToMapPage(double latitude, double longitude) {
                           fit: BoxFit.cover,
                         ),
                       ),
-                    
+                    ),
                   );
                 }).toList(),
                 options: CarouselOptions(
@@ -94,7 +88,7 @@ void _navigateToMapPage(double latitude, double longitude) {
                   enableInfiniteScroll: true,
                   autoPlayAnimationDuration: Duration(milliseconds: 800),
                   viewportFraction: 0.98,
-                  height: 200,
+                  height: 350,
                 ),
               ),
           searchTF(),
@@ -158,33 +152,30 @@ void _navigateToMapPage(double latitude, double longitude) {
   }
 
   Widget searchTF() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              const Radius.circular(5.0),
-            ),
+    return TextField(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: const BorderRadius.all(
+            const Radius.circular(5.0),
           ),
-          filled: true,
-          fillColor: Colors.white60,
-          contentPadding: EdgeInsets.all(15.0),
-          hintText: 'Filter by Bus Stop Code',
         ),
-        onChanged: (string) {
-          debouncer.run(() {
-            // setState(() {
-            //   title = 'Searching..';
-            // });
-            HttpService.getBusStops().then((uCp) {
-              setState(() {
-                _cp = Value.filterList(uCp, string);
-              });
+        filled: true,
+        fillColor: Colors.white60,
+        contentPadding: EdgeInsets.all(15.0),
+        hintText: 'Filter by Bus Stop Code',
+      ),
+      onChanged: (string) {
+        debouncer.run(() {
+          // setState(() {
+          //   title = 'Searching..';
+          // });
+          HttpService.getBusStops().then((uCp) {
+            setState(() {
+              _cp = Value.filterList(uCp, string);
             });
           });
-        },
-      ),
+        });
+      },
     );
   }
 }

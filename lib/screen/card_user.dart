@@ -79,7 +79,12 @@ class UserCardsPage extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: Text('Choose Card'),
+                               style: ElevatedButton.styleFrom(
+                              primary: Colors.teal, // Set the background color here
+                              ),
+                              child: Text('Choose Card', 
+                             ),
+                              
                             ),
                           ],
                         ),
@@ -131,16 +136,18 @@ class UserCardsPage extends StatelessWidget {
                                   ),
                                   SizedBox(height: 6,),
                                   Padding(
-                                   padding: const EdgeInsets.fromLTRB(8,0,16,0),
+                                   padding: const EdgeInsets.fromLTRB(8,0,12,0),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                          // Replace with actual row content
                                         Text(
-                                            'Find My Line', style: TextStyle(fontStyle: FontStyle.italic),),
+                                            'Find My Line', 
+                                            style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),),
                                             Text(
-                                            '\$${userCardData['value']}'),
+                                            '\$${userCardData['value']}',
+                                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
                                       ],
                                     ),
                                   ),
@@ -170,7 +177,11 @@ class UserCardsPage extends StatelessWidget {
                                   ),
                                 );
                               },
-                              child: Text('Update Card'),
+                              style: ElevatedButton.styleFrom(
+                              primary: Colors.teal, // Set the background color here
+                              ),
+                              child: Text('Update Card', 
+                             ),
                             ),
 
                           ],
