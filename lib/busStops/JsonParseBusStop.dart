@@ -92,7 +92,7 @@ void _navigateToMapPage(double latitude, double longitude) {
                   aspectRatio: 16 / 9,
                   autoPlayCurve: Curves.fastOutSlowIn,
                   enableInfiniteScroll: true,
-                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                  autoPlayAnimationDuration: Duration(milliseconds: 400),
                   viewportFraction: 0.98,
                   height: 200,
                 ),
